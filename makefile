@@ -15,4 +15,4 @@ find:
 	$(CC) $(SOURCES) $(CFLAGS) $@
 
 clean:
-	rm -f ./myping
+	rm -f ./find
