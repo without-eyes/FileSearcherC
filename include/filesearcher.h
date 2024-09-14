@@ -4,15 +4,15 @@
 #include <stdbool.h>
 
 #ifdef __unix__
-    #define ROOT_FOLDER "/"
+    #define ROOT_DIRECTORY "/"
 #elif defined(_WIN32) || defined(WIN32)/
-    #define ROOT_FOLDER "C:/"
+    #define ROOT_DIRECTORY "C:/"
 #endif
 
 void find(const char* fileName);
 
-bool isInFolder(char* filePath, const char* fileName);
+void searchInFolder(char* currentDirectoryPath, const char* fileName);
 
-void goToSubdirectory(char* directory);
+bool isInFolder(char* directoryPath, const char* fileName);
 
 #endif //FILESEARCHER_H
