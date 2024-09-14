@@ -5,9 +5,15 @@
 #include <dirent.h>
 #include <stdlib.h>
 
-void find(const char* fileName) {
-    char* currentDirectoryPath = ROOT_DIRECTORY;
-    searchInFolder(currentDirectoryPath, fileName);
+// ДОДАТИ ПОШУК З * і .
+// ДОДАТИ БАГАТОПОТОКОВІСТЬ
+// ЗАРЕФАКТОРИТИ КОД ПО ТРЕЛЛО
+// ЮНІТ ТЕСТИ
+
+void find(const char* fileArray[], const int fileArraySize) {
+    for (int i = 1; i < fileArraySize; i++) {
+        searchInFolder(ROOT_DIRECTORY, fileArray[i]);
+    }
 }
 
 void searchInFolder(char* currentDirectoryPath, const char* fileName) {

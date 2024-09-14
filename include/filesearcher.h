@@ -9,7 +9,7 @@
     #define ROOT_DIRECTORY "C:/"
 #endif
 
-void find(const char* fileName);
+void find(const char* fileArray[], int fileArraySize);
 
 void searchInFolder(char* currentDirectoryPath, const char* fileName);
 
