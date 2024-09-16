@@ -13,6 +13,8 @@ void find(const char* fileArray[], int fileArraySize);
 
 void searchInFolder(char* currentDirectoryPath, const char* fileName);
 
-bool isInFolder(char* directoryPath, const char* fileName);
+bool isInFolder(const char* directoryPath, const char* fileName);
+
+bool isFileSuitable(const char* searchedFileName, const char* currentFileName);
 
 #endif //FILESEARCHER_H

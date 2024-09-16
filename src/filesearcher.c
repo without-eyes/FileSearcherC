@@ -5,13 +5,16 @@
 #include <dirent.h>
 #include <stdlib.h>
 
-// ДОДАТИ ПОШУК З * і .
+// ФІКСАНУТИ ВИВІД ШЛЯХУ КОЛИ ВИКОРИСТОВУЄТЬСЯ . або *
+// ФІКСАНУТИ ЩО ПОГАНО ШУКАЄ main.c з . або *
 // ДОДАТИ БАГАТОПОТОКОВІСТЬ
 // ЗАРЕФАКТОРИТИ КОД ПО ТРЕЛЛО
 // ЮНІТ ТЕСТИ
+// НАПИСАТИ README
 
 void find(const char* fileArray[], const int fileArraySize) {
     for (int i = 1; i < fileArraySize; i++) {
+        printf("\n========================\n%s\n========================\n", fileArray[i]);
         searchInFolder(ROOT_DIRECTORY, fileArray[i]);
     }
 }
@@ -38,11 +41,35 @@ void searchInFolder(char* currentDirectoryPath, const char* fileName) {
     closedir(currentDirectory);
 }
 
-bool isInFolder(char* directoryPath, const char* fileName) {
-    char filePath[1000];
-    if (snprintf(filePath, sizeof(filePath), "%s/%s", directoryPath, fileName) >= sizeof(filePath)) return false;
-    FILE *file = fopen(filePath, "r");
-    if (file == NULL) return false;
-    fclose(file);
-    return true;
+bool isInFolder(const char* directoryPath, const char* fileName) {
+    DIR *directory = opendir(directoryPath);
+    if (!directory) {
+        return false;
+    }
+
+    struct dirent *entry;
+    while ((entry = readdir(directory)) != NULL) {
+        if (isFileSuitable(fileName, entry->d_name)) {
+            closedir(directory);
+            return true;
+        }
+    }
+
+    closedir(directory);
+    return false;
+}
+
+bool isFileSuitable(const char* searchedFileName, const char* currentFileName) {
+    int i = 0, j = 0;
+    while (i < strlen(currentFileName)) {
+        if (searchedFileName[j] == currentFileName[i] || searchedFileName[j] == '.') {
+            j++;
+            i++;
+        } else if (searchedFileName[j] == '8') {
+            i++;
+        } else {
+            return false;
+        }
+    }
+    return searchedFileName[j] == '\0';
 }
