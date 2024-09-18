@@ -5,44 +5,55 @@
 #include <dirent.h>
 #include <stdlib.h>
 
-void find(const char* fileArray[], const int fileArraySize) {
+void findFile(const char* fileArray[], const int fileArraySize) {
     for (int i = 1; i < fileArraySize; i++) {
-        searchInFolder(ROOT_DIRECTORY, fileArray[i]);
+        searchInRootFolder(ROOT_DIRECTORY, fileArray[i]);
     }
 }
 
-void searchInFolder(char* currentDirectoryPath, const char* fileName) {
+void searchInRootFolder(char* currentDirectoryPath, const char* fileName) {
     DIR *currentDirectory = opendir(currentDirectoryPath);
-    if (!currentDirectory) return;
+    if (!currentDirectory) {
+        return;
+    }
 
     struct dirent *entry;
     while ((entry = readdir(currentDirectory)) != NULL) {
-        if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) continue;
+        if (isDotDirectory(entry->d_name)) {
+            continue;
+        }
 
         if (entry->d_type != DT_DIR && isFileSuitable(fileName, entry->d_name)) {
             printf("%s/%s\n", currentDirectoryPath, entry->d_name);
-        }
-
-        if (entry->d_type == DT_DIR) {
+        } else if (entry->d_type == DT_DIR) {
             char newPath[1000];
             snprintf(newPath, sizeof(newPath), "%s/%s", currentDirectoryPath, entry->d_name);
-            searchInFolder(newPath, fileName);
+            searchInRootFolder(newPath, fileName);
         }
     }
+
     closedir(currentDirectory);
 }
 
+void recursiveSearch(char* currentDirectoryPath, const char* fileName) {
+
+}
+
 bool isFileSuitable(const char* searchedFileName, const char* currentFileName) {
-    int i = 0, j = 0;
-    while (i < strlen(currentFileName)) {
-        if (searchedFileName[j] == currentFileName[i] || searchedFileName[j] == '.') {
-            j++;
-            i++;
-        } else if (searchedFileName[j] == '*') {
+    int currentFilePosition = 0, searchedFilePosition = 0;
+    while (currentFilePosition < strlen(currentFileName)) {
+        if (searchedFileName[searchedFilePosition] == currentFileName[currentFilePosition] || searchedFileName[searchedFilePosition] == '.') {
+            searchedFilePosition++;
+            currentFilePosition++;
+        } else if (searchedFileName[searchedFilePosition] == '*') {
             return true;
         } else {
             return false;
         }
     }
-    return searchedFileName[j] == '\0';
+    return searchedFileName[searchedFilePosition] == '\0';
+}
+
+bool isDotDirectory(const char* directoryName) {
+    return strcmp(directoryName, ".") == 0 || strcmp(directoryName, "..") == 0;
 }

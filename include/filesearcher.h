@@ -9,10 +9,14 @@
     #define ROOT_DIRECTORY "C:/"
 #endif
 
-void find(const char* fileArray[], int fileArraySize);
+void findFile(const char* fileArray[], int fileArraySize);
 
-void searchInFolder(char* currentDirectoryPath, const char* fileName);
+void searchInRootFolder(char* currentDirectoryPath, const char* fileName);
+
+void recursiveSearch(char* currentDirectoryPath, const char* fileName);
 
 bool isFileSuitable(const char* searchedFileName, const char* currentFileName);
+
+bool isDotDirectory(const char* directoryName);
 
 #endif //FILESEARCHER_H
