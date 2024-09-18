@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -g -Wall -I$(IDIR) -o
+CFLAGS = -g -Wall -I$(IDIR) -lpthread -o
 
 IDIR = ./include/
 SRCDIR = ./src/

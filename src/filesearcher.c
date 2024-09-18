@@ -4,14 +4,42 @@
 #include <string.h>
 #include <dirent.h>
 #include <stdlib.h>
+#include <pthread.h>
+
+pthread_mutex_t print_mutex;
 
 void findFile(const char* fileArray[], const int fileArraySize) {
+    pthread_t threads[MAX_THREADS];
+    int threadCount = 0;
+
     for (int i = 1; i < fileArraySize; i++) {
-        searchInRootFolder(ROOT_DIRECTORY, fileArray[i]);
+        FilePath* filePath = malloc(sizeof(FilePath));
+        snprintf(filePath->path, sizeof(filePath->path), "%s", ROOT_DIRECTORY);
+        filePath->fileName = fileArray[i];
+
+        pthread_create(&threads[threadCount++], NULL, threadedSearch, filePath);
+
+        if (threadCount >= MAX_THREADS) {
+            for (int j = 0; j < threadCount; j++) {
+                pthread_join(threads[j], NULL);
+            }
+            threadCount = 0;
+        }
+    }
+
+    for (int j = 0; j < threadCount; j++) {
+        pthread_join(threads[j], NULL);
     }
 }
 
-void searchInRootFolder(char* currentDirectoryPath, const char* fileName) {
+void* threadedSearch(void* params) {
+    FilePath* filePath = params;
+    recursiveSearch(filePath->path, filePath->fileName);
+    free(params);
+    return NULL;
+}
+
+void recursiveSearch(char* currentDirectoryPath, const char* fileName) {
     DIR *currentDirectory = opendir(currentDirectoryPath);
     if (!currentDirectory) {
         return;
@@ -24,19 +52,21 @@ void searchInRootFolder(char* currentDirectoryPath, const char* fileName) {
         }
 
         if (entry->d_type != DT_DIR && isFileSuitable(fileName, entry->d_name)) {
+            pthread_mutex_lock(&print_mutex);
             printf("%s/%s\n", currentDirectoryPath, entry->d_name);
+            pthread_mutex_unlock(&print_mutex);
         } else if (entry->d_type == DT_DIR) {
             char newPath[1000];
-            snprintf(newPath, sizeof(newPath), "%s/%s", currentDirectoryPath, entry->d_name);
-            searchInRootFolder(newPath, fileName);
+            if (currentDirectoryPath[strlen(currentDirectoryPath) - 1] == '/') {
+                snprintf(newPath, sizeof(newPath), "%s%s", currentDirectoryPath, entry->d_name);
+            } else {
+                snprintf(newPath, sizeof(newPath), "%s/%s", currentDirectoryPath, entry->d_name);
+            }
+            recursiveSearch(newPath, fileName);
         }
     }
 
     closedir(currentDirectory);
-}
-
-void recursiveSearch(char* currentDirectoryPath, const char* fileName) {
-
 }
 
 bool isFileSuitable(const char* searchedFileName, const char* currentFileName) {

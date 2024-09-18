@@ -9,9 +9,16 @@
     #define ROOT_DIRECTORY "C:/"
 #endif
 
+#define MAX_THREADS 16
+
+typedef struct {
+    char path[1000];
+    const char* fileName;
+} FilePath;
+
 void findFile(const char* fileArray[], int fileArraySize);
 
-void searchInRootFolder(char* currentDirectoryPath, const char* fileName);
+void* threadedSearch(void* params);
 
 void recursiveSearch(char* currentDirectoryPath, const char* fileName);
 
