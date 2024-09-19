@@ -1,5 +1,5 @@
 # Find Command
-This is a custom implementation of a `find`-like command for UNIX-like operating systems, written in C.
+This is a simple custom implementation of a [`find`](https://en.wikipedia.org/wiki/Find_(Unix))-like command for UNIX-like operating systems, written in C.
 
 
 ## Features
@@ -11,14 +11,14 @@ This is a custom implementation of a `find`-like command for UNIX-like operating
 ## Installation
 To compile and install the `find` command, follow these steps:
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/without-eyes/findCommand.git
-   cd findCommand
-   ```
-2. Compile the program:
-  ```bash
-  make
-  ```
+```bash
+git clone https://github.com/without-eyes/findCommand.git
+cd findCommand
+```
+3. Compile the program:
+```bash
+make
+```
 
 
 ## Usage
@@ -40,9 +40,9 @@ Search for all files with names starting with "test":
 ```bash
 /find test*
 ```
-Search for all types of files with name "test.":
+Search for all types of files with name "test":
 ```bash
-/find test..
+/find test.*
 ```
 
 
@@ -52,4 +52,4 @@ The code is designed to be simple and demonstrate basic file search functionalit
 
 
 ## License
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the [MIT License](LICENSE).
