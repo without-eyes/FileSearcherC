@@ -1,18 +1,24 @@
 CC = gcc
-CFLAGS = -g -Wall -I$(IDIR) -lpthread -o
+CFLAGS = -g -Wall -I$(IDIR) -lpthread
 
 IDIR = ./include/
 SRCDIR = ./src/
 
-SOURCES = $(SRCDIR)*.c
+SOURCES = $(wildcard $(SRCDIR)*.c)
+OBJS = $(SOURCES:.c=.o)
 
-.PHONY: all
+TARGET = find
+
+.PHONY: all clean
 .SILENT: all
 
-all: clean find
+all: clean $(TARGET)
 
-find:
-	$(CC) $(SOURCES) $(CFLAGS) $@
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f ./find
+	rm -f $(OBJS) $(TARGET)
