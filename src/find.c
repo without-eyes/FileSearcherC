@@ -1,4 +1,4 @@
-#include "../include/filesearcher.h"
+#include "../include/find.h"
 
 #include <stdio.h>
 #include <string.h>

@@ -1,5 +1,5 @@
-#ifndef FILESEARCHER_H
-#define FILESEARCHER_H
+#ifndef FIND_H
+#define FIND_H
 
 #include <stdbool.h>
 
@@ -21,4 +21,4 @@ bool isFileSuitable(const char* searchedFileName, const char* currentFileName);
 
 bool isDotDirectory(const char* directoryName);
 
-#endif //FILESEARCHER_H
+#endif //FIND_H
